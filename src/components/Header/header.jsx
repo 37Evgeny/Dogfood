@@ -1,11 +1,23 @@
-import './index.css';
+import s from './index.module.css';
+import cn from 'classnames';
 
 
-function Header({children}) {
+function Header({children, user, onUpdateUser}) {
+// функция изменения  
+const handleClickButtonEdit=(e)=>{
+  e.preventDefault();
+  onUpdateUser({name: 'Maxim', about:'Mentor'})
+}
+
   return (
-    <header className='header'>
+     <header className={cn(s.header,'cover')}>
       <div className="container">
-        <div className="header__wrapper">
+        {user?.email && <span>{user?.email}</span>}
+        {user?.name && <span>{user?.name}</span>}
+{/* Кнопка  */}
+        <button className='btn' onClick={handleClickButtonEdit}>Изменить</button>
+
+        <div className={s.wrapper}>
           {/*Добавляем все дочерние элементы */}
           {children}
         </div>
