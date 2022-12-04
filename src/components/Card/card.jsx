@@ -7,7 +7,7 @@ const Card = ({name, _id, likes, price, discount, wight, description, pictures, 
 	
 	const discount_price= Math.round(price - price * discount/100) 
 
-	const liked = isLiked(likes, currentUser._id)
+	const liked = isLiked(likes, currentUser?._id)
 
 
 	function handleLikeClick(){

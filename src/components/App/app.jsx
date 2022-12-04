@@ -14,6 +14,7 @@ import './index.css';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import useDebounce from '../../hooks/useDebounce';
+import Spinner from '../Spinner/spinner';
 
 
 
@@ -24,6 +25,8 @@ function App() {
   const [searchQuery, setSearchQuery] = useState('');
 
   const [currentUser, setCurrentUser] = useState(null);
+  // Состояние для спинера 
+  const [isLoading, setIsLoading] = useState(false);
 // вызываем функцию useDebounce    
   const debounceSearchQuery= useDebounce(searchQuery, 500);
 
@@ -31,7 +34,8 @@ function App() {
   const handleRequest= () => {
     // const filterCards =cards.filter(item=>item.name.toUpperCase().includes(searchQuery.toUpperCase()));
     // setCards(filterCards);
-
+    //  влючаем спиннер                 
+    setIsLoading(true);
     // поиск по товарам с сервера
     api.search(debounceSearchQuery)
     .then((searchResult)=>{
@@ -39,10 +43,15 @@ function App() {
     })
     // Чтобы не было не обработаного промиса
     .catch(err=> console.log(err))
+    // выключаем спинер
+    .finally(()=>{
+      setIsLoading(false);
+    })
   }
   
 useEffect(()=>{
-
+  //  влючаем спиннер  
+  setIsLoading(true)
   Promise.all([api.getProductList(), api.getUserInfo()])
     .then(([productsData, userData])=>{
       setCurrentUser(userData)
@@ -50,6 +59,10 @@ useEffect(()=>{
   })
    // Чтобы не было не обработаного промиса
    .catch(err=> console.log(err))
+   // выключаем спинер
+   .finally(()=> {
+    setIsLoading(false)
+   })
 },[])
 
 //Динамическое изменение поиска 
@@ -102,7 +115,10 @@ useEffect(()=>{
       <main className='content container'>
         <SeachInfo searchCount={cards.length} searchText={searchQuery}/>
         <div className='content__cards'>
-         <CardList goods={cards} onProductLike={handleProductLike} currentUser={currentUser}/>
+          {isLoading
+          ?<Spinner/>
+          :<CardList goods={cards} onProductLike={handleProductLike} currentUser={currentUser}/>
+          }
         </div>
       </main>
       <Footer/>
