@@ -26,7 +26,7 @@ function App() {
 
   const [currentUser, setCurrentUser] = useState(null);
   // Состояние для спинера 
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 // вызываем функцию useDebounce    
   const debounceSearchQuery= useDebounce(searchQuery, 500);
 
@@ -71,8 +71,8 @@ useEffect(()=>{
   },[debounceSearchQuery])
 
 // Функция которая осуществляет поиск по нажатию на кнопку
-  function handleFormSubmit(e) {
-    e.preventDefault();
+  function handleFormSubmit(value) {
+    e.preventDefault(value);
     //  Вызываем функцию 
     handleRequest();
   } 

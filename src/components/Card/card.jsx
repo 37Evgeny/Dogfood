@@ -2,12 +2,12 @@ import cn from 'classnames';
 import './index.css';
 import {ReactComponent as Save} from "./save.svg";
 import { isLiked } from '../../utils/product';
+import { calcDiscountPrice } from '../../utils/product';
 
-const Card = ({name, _id, likes, price, discount, wight, description, pictures, onProductLike, currentUser}) => {
-	
-	const discount_price= Math.round(price - price * discount/100) 
+const Card = ({name, _id, likes, price, discount, wight, description, pictures, onProductLike, currentUser}) => { 
 
-	const liked = isLiked(likes, currentUser?._id)
+	const discount_price = calcDiscountPrice(price, discount);
+	const liked = isLiked(likes, currentUser?._id);
 
 
 	function handleLikeClick(){

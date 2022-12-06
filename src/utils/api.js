@@ -8,7 +8,7 @@ class Api {
         this._headers= headers;
         this._baseUrl= baseUrl;
     }
-
+// Получение карточе        
     getProductList(){
         return fetch(`${this._baseUrl}/products`, {
             headers: this._headers
@@ -44,6 +44,12 @@ class Api {
         } ).then(onResponce)
     }
 
+    //    Полчучение карточки
+    getProductById(idProduct){
+        return fetch(`${this._baseUrl}/products/${idProduct}`, {
+            headers: this._headers
+        }).then(onResponce)
+    }
 }
 
 const config={
