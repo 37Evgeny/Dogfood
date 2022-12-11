@@ -16,7 +16,7 @@ function Search({onSubmit: propsOnSubmit, onInput}) {
 const handleFormSubmit = (e) => {
   e.preventDefault();
   propsOnSubmit(inputText)
-  setInputText("")
+  // setInputText("")
 }
 
 // Вставляет пустую строку

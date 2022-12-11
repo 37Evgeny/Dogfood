@@ -7,14 +7,23 @@ import Search from '../Search/search';
 import SeachInfo from '../SeachInfo';
 import api from '../../utils/api';
 import { isLiked } from '../../utils/product';
+import Spinner from '../Spinner/spinner';
+import {CatalogPage} from '../../pages/CatalogPage/catalog-page';
+import {ProductPage} from '../../pages/ProductPage/product-page';
+import { UserContext } from '../../context/userContext';
 
 import './index.css';
 // import data from '../../assets/data.json'
 // подключаем хуки
 import { useState } from 'react';
 import { useEffect } from 'react';
+import { useCallback} from 'react'
 import useDebounce from '../../hooks/useDebounce';
-import Spinner from '../Spinner/spinner';
+import {  Routes, Route, useNavigate } from 'react-router-dom';
+import { NotFound, NotFoundPage } from '../../pages/NotFoundPage/not-found-page';
+import { CardContext } from '../../context/cardContext';
+import { ThemeContext } from 'styled-components';
+import { themes } from '../../context/themeContext';
 
 
 
@@ -27,27 +36,45 @@ function App() {
   const [currentUser, setCurrentUser] = useState(null);
   // Состояние для спинера 
   const [isLoading, setIsLoading] = useState(true);
+
+  const [theme, setTheme] = useState(themes.light);
 // вызываем функцию useDebounce    
   const debounceSearchQuery= useDebounce(searchQuery, 500);
-
-  // Функция фильтрует карточки 
-  const handleRequest= () => {
-    // const filterCards =cards.filter(item=>item.name.toUpperCase().includes(searchQuery.toUpperCase()));
-    // setCards(filterCards);
-    //  влючаем спиннер                 
-    setIsLoading(true);
-    // поиск по товарам с сервера
-    api.search(debounceSearchQuery)
-    .then((searchResult)=>{
-      setCards(searchResult)
-    })
-    // Чтобы не было не обработаного промиса
-    .catch(err=> console.log(err))
-    // выключаем спинер
-    .finally(()=>{
-      setIsLoading(false);
-    })
-  }
+const navigate = useNavigate()
+  // // Функция фильтрует карточки 
+  // const handleRequest= () => {
+  //   // const filterCards =cards.filter(item=>item.name.toUpperCase().includes(searchQuery.toUpperCase()));
+  //   // setCards(filterCards);
+  //   //  влючаем спиннер                 
+  //   setIsLoading(true);
+  //   // поиск по товарам с сервера
+  //   api.search(debounceSearchQuery)
+  //   .then((searchResult)=>{
+  //     setCards(searchResult)
+  //   })
+  //   // Чтобы не было не обработаного промиса
+  //   .catch(err=> console.log(err))
+  //   // выключаем спинер
+  //   .finally(()=>{
+  //     setIsLoading(false);
+  //   })
+  // }
+    // Функция фильтрует карточки 
+    const handleRequest = useCallback(() => {
+      //  влючаем спиннер                 
+      setIsLoading(true);
+      // поиск по товарам с сервера
+      api.search(searchQuery)
+      .then((searchResult)=>{
+      
+      })
+      // Чтобы не было не обработаного промиса
+      .catch(err=> console.log(err))
+      // выключаем спинер
+      .finally(()=>{
+        setIsLoading(false);
+      })
+    },[searchQuery])
   
 useEffect(()=>{
   //  влючаем спиннер  
@@ -71,8 +98,9 @@ useEffect(()=>{
   },[debounceSearchQuery])
 
 // Функция которая осуществляет поиск по нажатию на кнопку
-  function handleFormSubmit(value) {
-    e.preventDefault(value);
+   const handleFormSubmit =(inputText)=> {
+    navigate('/');
+    setSearchQuery(inputText)
     //  Вызываем функцию 
     handleRequest();
   } 
@@ -90,39 +118,56 @@ useEffect(()=>{
     })
   }
 // Фунция установки лайка 
-  function handleProductLike(product){
+  const handleProductLike = useCallback((product)=>{
     const liked = isLiked(product.likes, currentUser._id)
-    api.changeLikeProduct(product._id, liked)
-    .then((newCard)=>{
+    return api.changeLikeProduct(product._id, liked)
+    .then((updateCard)=>{
       // Перебирает массив 
       const newProducts = cards.map(cardState=>{
           // Возвращает новый массив если был поставлен лайк или удален       
-         return cardState._id ===newCard._id ? newCard : cardState;
+         return cardState._id ===updateCard._id ? updateCard : cardState;
       })
       setCards(newProducts);
+      return updateCard;
     })
+  },[currentUser])
+// переключение темы
+  const toggleTheme= ()=>{
+    theme === themes.dark? setTheme(themes.light) : setTheme(themes.dark);
   }
 
-
   return (
-    <>
+    <ThemeContext.Provider value={{theme: themes.light, toggleTheme}}>
+    <UserContext.Provider value={{user: currentUser}}>
+      <CardContext.Provider value={{cards, handleLike: handleProductLike}}>
     <Header user={currentUser} onUpdateUser={handleUpdateUser} >
         <>
           <Logo className="logo logo_place_header" href="/" />
-          <Search onSubmit={handleFormSubmit} onInput={handleInputChange}/>
+          <Routes>
+            <Route path = '/' element = {
+                   <Search onSubmit={handleFormSubmit}
+                   onInput={handleInputChange}
+                  />
+            }/>
+          </Routes>
         </>
       </Header>
       <main className='content container'>
-        <SeachInfo searchCount={cards.length} searchText={searchQuery}/>
-        <div className='content__cards'>
-          {isLoading
-          ?<Spinner/>
-          :<CardList goods={cards} onProductLike={handleProductLike} currentUser={currentUser}/>
-          }
-        </div>
+        <SeachInfo searchText={searchQuery}/>
+        <Routes>
+          <Route index element={
+            <CatalogPage isLoading={isLoading}/>
+          } />
+          <Route path='/product/:productId' element={
+            <ProductPage isLoading={isLoading} />
+          } />
+          <Route path='*' element={NotFoundPage}/>
+        </Routes>
       </main>
       <Footer/>
-    </>
+      </CardContext.Provider>
+    </UserContext.Provider>
+    </ThemeContext.Provider>
   )
 }
 
