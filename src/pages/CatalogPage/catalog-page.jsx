@@ -1,7 +1,7 @@
 import CardList from "../../components/CardList/card-list"
 import Spinner from "../../components/Spinner/spinner"
 
-export const CatalogPage = ({isLoading, currentUser, handleProductLike, cards}) =>{
+export const CatalogPage = ({isLoading}) =>{
     return (
         <>
             <div className='content__cards'>
@@ -10,6 +10,7 @@ export const CatalogPage = ({isLoading, currentUser, handleProductLike, cards}) 
                     : <CardList />
                 }
             </div>
+            console.log(CatalogPage)
         </>
     )
 }

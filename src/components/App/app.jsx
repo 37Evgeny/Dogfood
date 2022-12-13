@@ -28,7 +28,7 @@ import { themes } from '../../context/themeContext';
 
 
 function App() {
-//  
+//  поиск
   const [cards, setCards] =useState([]);
   //   
   const [searchQuery, setSearchQuery] = useState('');
@@ -41,6 +41,7 @@ function App() {
 // вызываем функцию useDebounce    
   const debounceSearchQuery= useDebounce(searchQuery, 500);
 const navigate = useNavigate()
+
   // // Функция фильтрует карточки 
   // const handleRequest= () => {
   //   // const filterCards =cards.filter(item=>item.name.toUpperCase().includes(searchQuery.toUpperCase()));
@@ -66,7 +67,7 @@ const navigate = useNavigate()
       // поиск по товарам с сервера
       api.search(searchQuery)
       .then((searchResult)=>{
-      
+        setCards(searchResult)
       })
       // Чтобы не было не обработаного промиса
       .catch(err=> console.log(err))
