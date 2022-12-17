@@ -10,7 +10,6 @@ export const CatalogPage = ({isLoading}) =>{
                     : <CardList />
                 }
             </div>
-            console.log(CatalogPage)
         </>
     )
 }

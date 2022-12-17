@@ -1,5 +1,4 @@
 // подключаем наши компоненты
-import CardList from '../CardList/card-list';
 import Footer from '../Footer/footer';
 import Header from '../Header/header';
 import Logo from '../Logo/logo';
@@ -7,7 +6,6 @@ import Search from '../Search/search';
 import SeachInfo from '../SeachInfo';
 import api from '../../utils/api';
 import { isLiked } from '../../utils/product';
-import Spinner from '../Spinner/spinner';
 import {CatalogPage} from '../../pages/CatalogPage/catalog-page';
 import {ProductPage} from '../../pages/ProductPage/product-page';
 import { UserContext } from '../../context/userContext';
@@ -24,6 +22,7 @@ import { NotFound, NotFoundPage } from '../../pages/NotFoundPage/not-found-page'
 import { CardContext } from '../../context/cardContext';
 import { ThemeContext } from 'styled-components';
 import { themes } from '../../context/themeContext';
+import { FaqPage } from '../../pages/FAQPage/faq-page';
 
 
 
@@ -131,7 +130,7 @@ useEffect(()=>{
       setCards(newProducts);
       return updateCard;
     })
-  },[currentUser])
+  },[currentUser, cards])
 // переключение темы
   const toggleTheme= ()=>{
     theme === themes.dark? setTheme(themes.light) : setTheme(themes.dark);
@@ -162,7 +161,8 @@ useEffect(()=>{
           <Route path='/product/:productId' element={
             <ProductPage isLoading={isLoading} />
           } />
-          <Route path='*' element={NotFoundPage}/>
+          <Route path='/faq' element={<FaqPage/>}/>
+          <Route path='*' element={<NotFoundPage/>}/>
         </Routes>
       </main>
       <Footer/>

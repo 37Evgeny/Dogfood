@@ -6,7 +6,7 @@ import './index.css';
 
 const CardList = () => {
 	const {cards} = useContext(CardContext)
-	console.log(cards);
+
 	return (
 		<div className='cards'>
 			{
