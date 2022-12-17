@@ -23,6 +23,7 @@ import { CardContext } from '../../context/cardContext';
 import { ThemeContext } from 'styled-components';
 import { themes } from '../../context/themeContext';
 import { FaqPage } from '../../pages/FAQPage/faq-page';
+import { FavoritePage } from '../../pages/FavoritePAge/favorite-page';
 
 
 
@@ -37,6 +38,7 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
 
   const [theme, setTheme] = useState(themes.light);
+  const [favorites,setFavorites]=useState([])
 // вызываем функцию useDebounce    
   const debounceSearchQuery= useDebounce(searchQuery, 500);
 const navigate = useNavigate()
@@ -83,6 +85,8 @@ useEffect(()=>{
     .then(([productsData, userData])=>{
       setCurrentUser(userData)
       setCards(productsData.products)
+      const favoriteProducts = productsData.products.filter(item=> isLiked(item.likes, userData._id))
+      setFavorites(prevState =>favoriteProducts)
   })
    // Чтобы не было не обработаного промиса
    .catch(err=> console.log(err))
@@ -127,6 +131,13 @@ useEffect(()=>{
           // Возвращает новый массив если был поставлен лайк или удален       
          return cardState._id ===updateCard._id ? updateCard : cardState;
       })
+
+      if(!liked){
+        setFavorites(prevState => [...prevState, updateCard])
+      }else{
+        setFavorites(prevState=> prevState.filter(card => card._id !== updateCard._id))
+      }
+
       setCards(newProducts);
       return updateCard;
     })
@@ -139,7 +150,7 @@ useEffect(()=>{
   return (
     <ThemeContext.Provider value={{theme: themes.light, toggleTheme}}>
     <UserContext.Provider value={{user: currentUser}}>
-      <CardContext.Provider value={{cards, handleLike: handleProductLike}}>
+      <CardContext.Provider value={{cards, favorites, handleLike: handleProductLike}}>
     <Header user={currentUser} onUpdateUser={handleUpdateUser} >
         <>
           <Logo className="logo logo_place_header" href="/" />
@@ -162,6 +173,7 @@ useEffect(()=>{
             <ProductPage isLoading={isLoading} />
           } />
           <Route path='/faq' element={<FaqPage/>}/>
+          <Route path='/favorites' element={<FavoritePage isLoading={isLoading}/>}/>
           <Route path='*' element={<NotFoundPage/>}/>
         </Routes>
       </main>

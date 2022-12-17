@@ -7,6 +7,7 @@ import { calcDiscountPrice, isLiked, createMarkup } from '../../utils/product';
 import {  useNavigate } from 'react-router-dom';
 import { useContext } from 'react';
 import { UserContext } from '../../context/userContext';
+import { ContentHeader } from '../ContentHeader/content-header';
 
 export const Product = ({onProductLike, pictures, likes=[], reviews, tags, name, price, discount, description, wight, _id}) =>{
     const {user: currentUser} = useContext(UserContext)
@@ -21,20 +22,19 @@ export const Product = ({onProductLike, pictures, likes=[], reviews, tags, name,
 
     return (
         <>
+            <ContentHeader title={name}>
             <div>
-                <a href="#" className="button-back" onClick={()=>navigate(-1)}>Назад</a>
-                <h1 className={s.productTitle}>{name}</h1>
-                <div>
                     <span>Артикул:</span> <b>2388907</b>
                 </div>
-            </div>
+                </ContentHeader>
+
             <div className={s.product}>
                 <div className={s.imgWrapper}>
                     <img src={pictures} alt={`Изображение ${name}`} />
                 </div>
                 <div className={s.desc}>
                     <span className={discount ? s.oldPrice : s.price}>{price}&nbsp;₽</span>
-                    {discount && <span className={cn(s.price, 'card__price_type_discount')}>{discount_price}&nbsp;₽</span>}
+                    {discount !== 0 && <span className={cn(s.price, 'card__price_type_discount')}>{discount_price}&nbsp;₽</span>}
                     <div className={s.btnWrap}>
                         <div className={s.left}>
                             <button className={s.minus}>-</button>
