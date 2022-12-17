@@ -99,6 +99,17 @@
 	display: flex;
 }
 
+.card__favorite svg{
+	fill: white;
+	stroke-width: 1px;
+	stroke: #7b8e98;
+}
+
+.card__favorite_is-active svg{
+	fill:red;
+	stroke-width: 0;
+}
+
 .card__cart {
 	margin-top: auto;
 }
