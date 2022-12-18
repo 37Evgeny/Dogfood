@@ -24,6 +24,7 @@ import { ThemeContext } from 'styled-components';
 import { themes } from '../../context/themeContext';
 import { FaqPage } from '../../pages/FAQPage/faq-page';
 import { FavoritePage } from '../../pages/FavoritePAge/favorite-page';
+import Form from '../Form/form';
 
 
 
@@ -147,10 +148,15 @@ useEffect(()=>{
     theme === themes.dark? setTheme(themes.light) : setTheme(themes.dark);
   }
 
+  const addContact= useCallback((FormData)=>{
+
+  },[])
+
   return (
     <ThemeContext.Provider value={{theme: themes.light, toggleTheme}}>
     <UserContext.Provider value={{user: currentUser}}>
       <CardContext.Provider value={{cards, favorites, handleLike: handleProductLike}}>
+      <Form serializeCb={addContact}/>
     <Header user={currentUser} onUpdateUser={handleUpdateUser} >
         <>
           <Logo className="logo logo_place_header" href="/" />
