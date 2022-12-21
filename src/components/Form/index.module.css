@@ -1,0 +1,37 @@
+.title {
+  width: 356px;
+  color: #000000;
+  margin: 24px 0px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 28px;
+  display: flex;
+  align-items: center;
+}
+
+Button.yellow {
+  background: #FFE44D;
+  border: none;
+}
+
+.infoText {
+  width: 356px;
+  color: #7B8E98;
+  margin: 20px 0px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-style: normal;
+  font-size: 12px;
+  line-height: 14px;
+}
+
+.link{
+  cursor: pointer;
+  text-align: right;
+}
+
+.errorMessage {
+  font-family: Arial, Helvetica, sans-serif;
+  text-align: end;
+  color: red;
+  font-size: 12px;
+  max-width: 340px;
+}

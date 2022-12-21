@@ -5,20 +5,7 @@ import Spinner from "../../components/Spinner/spinner"
 import { CardContext } from "../../context/cardContext"
 
 
-const tabs =[
-    {
-        id: "cheap",
-        title:'Сначала дешевые'
-    },
-    {
-        id: "low",
-        title:'Сначала дорогие'
-    },
-    {
-        id: "sale",
-        title:'По скидке'
-    },
-];
+
 
 
 export const CatalogPage = ({isLoading}) =>{
@@ -26,7 +13,7 @@ export const CatalogPage = ({isLoading}) =>{
 
     return (
         <>
-            <Sort tabs={tabs}/>
+            <Sort/>
             <div className='content__cards'>
                 {isLoading
                     ? <Spinner />

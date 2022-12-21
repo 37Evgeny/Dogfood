@@ -12,6 +12,9 @@ function RegistrationForm() {
 
     }
 
+
+    
+
 	return (
 		<form onSubmit={handleSubmit(cbSubmit)}>
 			<h3>Регистрация</h3>    
