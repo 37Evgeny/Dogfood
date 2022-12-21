@@ -17,7 +17,7 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 import { useCallback} from 'react'
 import useDebounce from '../../hooks/useDebounce';
-import {  Routes, Route, useNavigate } from 'react-router-dom';
+import {  Routes, Route, useNavigate, Link, useLocation } from 'react-router-dom';
 import { NotFound, NotFoundPage } from '../../pages/NotFoundPage/not-found-page';
 import { CardContext } from '../../context/cardContext';
 import { ThemeContext } from 'styled-components';
@@ -25,6 +25,8 @@ import { themes } from '../../context/themeContext';
 import { FaqPage } from '../../pages/FAQPage/faq-page';
 import { FavoritePage } from '../../pages/FavoritePAge/favorite-page';
 import Form from '../Form/form';
+import RegitrationForm from '../Form/registration-form';
+import Modal from '../Modal/modal';
 
 
 
@@ -43,6 +45,13 @@ function App() {
 // вызываем функцию useDebounce    
   const debounceSearchQuery= useDebounce(searchQuery, 500);
 const navigate = useNavigate()
+
+  const [isOpenModalForm, setIsOpenModalForm] = useState(false);
+  const location = useLocation();
+  const backgroundLocation = location.state?.backgroundLocation;
+  const initialPath= location.state?.initialPath
+
+
 
   // // Функция фильтрует карточки 
   // const handleRequest= () => {
@@ -156,11 +165,15 @@ useEffect(()=>{
     <ThemeContext.Provider value={{theme: themes.light, toggleTheme}}>
     <UserContext.Provider value={{user: currentUser}}>
       <CardContext.Provider value={{cards, favorites, handleLike: handleProductLike}}>
-      <Form serializeCb={addContact}/>
+     
+      {/* <Modal active={isOpenModalForm} setActive={setIsOpenModalForm}>
+          <RegitrationForm/>
+      </Modal> */}
+      <button onClick={()=>setIsOpenModalForm(true)}>Войти</button>
     <Header user={currentUser} onUpdateUser={handleUpdateUser} >
         <>
           <Logo className="logo logo_place_header" href="/" />
-          <Routes>
+          <Routes >
             <Route path = '/' element = {
                    <Search onSubmit={handleFormSubmit}
                    onInput={handleInputChange}
@@ -171,7 +184,7 @@ useEffect(()=>{
       </Header>
       <main className='content container'>
         <SeachInfo searchText={searchQuery}/>
-        <Routes>
+        <Routes location={(backgroundLocation && {...backgroundLocation, pathname: initialPath}) || location}>
           <Route index element={
             <CatalogPage isLoading={isLoading}/>
           } />
@@ -180,8 +193,44 @@ useEffect(()=>{
           } />
           <Route path='/faq' element={<FaqPage/>}/>
           <Route path='/favorites' element={<FavoritePage isLoading={isLoading}/>}/>
+{/* отвечает за фоновое отображение */}
+          <Route path='/login' element={
+            <>
+              Авторизация
+              <Link to='/register'>Зарегистрироваться</Link>
+            </>
+          }/>
+
+          <Route path='/register' element={
+            <Modal>
+              Регистрация
+              <Link to='/login'>Войти</Link>
+            </Modal>
+          }/>
+
           <Route path='*' element={<NotFoundPage/>}/>
+
         </Routes>
+          {/* отвечает за обычное отображение */}
+          {backgroundLocation && (
+            <Routes>
+                 <Route path='/login' element={
+            <Modal>
+              Авторизация
+              <Link to='/register' replace={true} state={{backgroundLocation: location, initialPath}}>Зарегистрироваться</Link>
+            </Modal>
+          }/>
+
+          <Route path='/register' element={
+            <Modal>
+              Регистрация
+              <Link to='/login' replace={true} state={{backgroundLocation: location, initialPath}}>Войти</Link>
+            </Modal>
+          }/>
+            </Routes>
+
+          )}
+
       </main>
       <Footer/>
       </CardContext.Provider>

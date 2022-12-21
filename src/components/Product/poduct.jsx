@@ -8,9 +8,13 @@ import {  useNavigate } from 'react-router-dom';
 import { useContext } from 'react';
 import { UserContext } from '../../context/userContext';
 import { ContentHeader } from '../ContentHeader/content-header';
+import { Rating } from '../Rating/rating';
+import { useState } from 'react';
 
 export const Product = ({onProductLike, pictures, likes=[], reviews, tags, name, price, discount, description, wight, _id}) =>{
     const {user: currentUser} = useContext(UserContext)
+
+    const [rating, setRating]= useState(3)
     // useNavigete хуk для навигации
     const navigate =useNavigate()
     //  считается скидка
@@ -25,6 +29,7 @@ export const Product = ({onProductLike, pictures, likes=[], reviews, tags, name,
             <ContentHeader title={name}>
             <div>
                     <span>Артикул:</span> <b>2388907</b>
+                    <Rating rating={rating} setRating={setRating} isEditable/>
                 </div>
                 </ContentHeader>
 
