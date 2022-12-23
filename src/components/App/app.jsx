@@ -1,4 +1,3 @@
-// подключаем наши компоненты
 import Footer from '../Footer/footer';
 import Header from '../Header/header';
 import Logo from '../Logo/logo';
@@ -8,25 +7,25 @@ import api from '../../utils/api';
 import { isLiked } from '../../utils/product';
 import { CatalogPage } from '../../pages/CatalogPage/catalog-page';
 import { ProductPage } from '../../pages/ProductPage/product-page';
-import { UserContext } from '../../context/userContext';
-
+import { themes } from '../../context/themeContext';
+import { FaqPage } from '../../pages/FAQPage/faq-page';
+import { FavoritePage } from '../../pages/FavoritePage/favorite-page';
+import Modal from '../Modal/modal';
+import { NotFound, NotFoundPage } from '../../pages/NotFoundPage/not-found-page';
 import './index.css';
 // import data from '../../assets/data.json'
-// подключаем хуки
+import { UserContext } from '../../context/userContext';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { useCallback } from 'react'
 import useDebounce from '../../hooks/useDebounce';
 import { Routes, Route, useNavigate, Link, useLocation } from 'react-router-dom';
-import { NotFound, NotFoundPage } from '../../pages/NotFoundPage/not-found-page';
 import { CardContext } from '../../context/cardContext';
 import { ThemeContext } from 'styled-components';
-import { themes } from '../../context/themeContext';
-import { FaqPage } from '../../pages/FAQPage/faq-page';
-import { FavoritePage } from '../../pages/FavoritePage/favorite-page';
-import Form from '../Form/form';
-import RegitrationForm from '../Form/registration-form';
-import Modal from '../Modal/modal';
+import { Register } from '../Register/register';
+import { Login } from '../Login/login';
+import { ResetPassword } from '../ResetPassword/reset-password';
+
 
 
 
@@ -48,7 +47,9 @@ function App() {
   const navigate = useNavigate()
 
   const [isOpenModalForm, setIsOpenModalForm] = useState(false);
+
   const location = useLocation();
+
   const backgroundLocation = location.state?.backgroundLocation;
   const initialPath = location.state?.initialPath
 
@@ -184,7 +185,7 @@ const sortedData=(currentSort)=>{
           {/* <Modal active={isOpenModalForm} setActive={setIsOpenModalForm}>
           <RegitrationForm/>
       </Modal> */}
-          <button onClick={() => setIsOpenModalForm(true)}>Войти</button>
+          {/* <button onClick={() => setIsOpenModalForm(true)}>Войти</button> */}
           <Header user={currentUser} onUpdateUser={handleUpdateUser} >
             <>
               <Logo className="logo logo_place_header" href="/" />
@@ -201,7 +202,7 @@ const sortedData=(currentSort)=>{
             <SeachInfo searchText={searchQuery} />
             <Routes location={(backgroundLocation && { ...backgroundLocation, pathname: initialPath }) || location}>
               <Route index element={
-                <CatalogPage isLoading={isLoading} />
+                <CatalogPage/>
               } />
               <Route path='/product/:productId' element={
                 <ProductPage isLoading={isLoading} />
@@ -210,17 +211,15 @@ const sortedData=(currentSort)=>{
               <Route path='/favorites' element={<FavoritePage isLoading={isLoading} />} />
               {/* отвечает за фоновое отображение */}
               <Route path='/login' element={
-                <>
-                  Авторизация
-                  <Link to='/register'>Зарегистрироваться</Link>
-                </>
+                 <Login />
               } />
 
               <Route path='/register' element={
-                <Modal>
-                  Регистрация
-                  <Link to='/login'>Войти</Link>
-                </Modal>
+                 <Register/>
+                } />
+
+                 <Route path='/reset-password' element={
+                 <ResetPassword/>
               } />
 
               <Route path='*' element={<NotFoundPage />} />
@@ -231,20 +230,23 @@ const sortedData=(currentSort)=>{
               <Routes>
                 <Route path='/login' element={
                   <Modal>
-                    Авторизация
-                    <Link to='/register' replace={true} state={{ backgroundLocation: location, initialPath }}>Зарегистрироваться</Link>
+                   <Login />
                   </Modal>
                 } />
 
                 <Route path='/register' element={
                   <Modal>
-                    Регистрация
-                    <Link to='/login' replace={true} state={{ backgroundLocation: location, initialPath }}>Войти</Link>
+                   <Register />
+                  </Modal>
+                } />
+
+                <Route path='/reset-password' element={
+                  <Modal>
+                    <ResetPassword />
                   </Modal>
                 } />
               </Routes>
-
-            )}
+              )}
 
           </main>
           <Footer />

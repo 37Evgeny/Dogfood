@@ -1,0 +1,28 @@
+.errorMessage {
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: end;
+    color: red;
+    font-size: 12px;
+    align-self: flex-start;
+  }
+
+  .infoText {
+    color: #7B8E98;
+    margin: 20px 0px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-style: normal;
+    font-size: 12px;
+    line-height: 14px;
+  }
+  
+  .link{
+    cursor: pointer;
+    text-align: right;
+  }
+
+  
+/* Button.yellow {
+    background: #FFE44D;
+    border: none;
+  }
+   */
