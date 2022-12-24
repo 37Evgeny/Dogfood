@@ -10,18 +10,21 @@ import { UserContext } from '../../context/userContext';
 import { ContentHeader } from '../ContentHeader/content-header';
 import { Rating } from '../Rating/rating';
 import { useState } from 'react';
+import { useMemo } from 'react';
+import { FormReview } from '../FormReview/form-review';
 
-export const Product = ({onProductLike, pictures, likes=[], reviews, tags, name, price, discount, description, wight, _id}) =>{
+
+export const Product = ({onProductLike, pictures, likes=[], reviews, tags, name, price, discount, description, wight, _id, setProduct}) =>{
     const {user: currentUser} = useContext(UserContext)
-
-    const [rating, setRating]= useState(3)
+    // const [rating, setRating]= useState(null)
     // useNavigete хуk для навигации
-    const navigate =useNavigate()
+    // const navigate =useNavigate()
     //  считается скидка
     const discount_price = calcDiscountPrice(price, discount);
     const descriptionHTML =createMarkup(description);
     const isLike = isLiked(likes, currentUser?._id);
 
+    const ratingCount= useMemo(()=> Math.round(reviews.reduce((acc, r)=>acc+=r.rating, 0)/reviews.length),[reviews])
 
 
     return (
@@ -29,7 +32,7 @@ export const Product = ({onProductLike, pictures, likes=[], reviews, tags, name,
             <ContentHeader title={name}>
             <div>
                     <span>Артикул:</span> <b>2388907</b>
-                    <Rating rating={rating} setRating={setRating} isEditable/>
+                    <Rating rating={ratingCount}/> {reviews.length} отзыв                
                 </div>
                 </ContentHeader>
 
@@ -102,6 +105,12 @@ export const Product = ({onProductLike, pictures, likes=[], reviews, tags, name,
                     </div>
     
             </div>
+
+            <ul>
+                {reviews.map(reviewData=><li key={reviewData._id}>{reviewData.text} <Rating rating={reviewData.rating}/></li>)}
+            </ul>
+            
+            <FormReview title={`Отзыв о товаре ${name}`} productId={_id} setProduct={setProduct}/>
         </>
         )
     }
