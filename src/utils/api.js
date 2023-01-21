@@ -28,6 +28,14 @@ class Api {
             body: JSON.stringify(dataUser)
         }).then(onResponce)
     }
+// Отправка отзыва на сервер
+    createReviewProduct(productId, reviewData){
+        return fetch(`${this._baseUrl}/products/review/${productId}`, {
+            method: 'POST',
+            headers: this._headers,
+            body: JSON.stringify(reviewData)
+        }).then(onResponce)
+    }
 
     // Поиск
     search(searchQuery){

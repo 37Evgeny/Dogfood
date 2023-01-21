@@ -6,7 +6,7 @@ import s from './index.module.css'
 import { useCallback } from "react";
 
 
-export const Rating = ({isEditable =false, rating, setRating, ...props})=>{
+export const Rating = ({isEditable =false, rating, setRating=null})=>{
 
     const [ratingArray, setRatingArray] =useState(new Array(5).fill(<></>))
 
@@ -35,12 +35,12 @@ export const Rating = ({isEditable =false, rating, setRating, ...props})=>{
     }
 
     const changeRating = (rating)=>{
-        if(!isEditable || ~setRating) return
+        if(!isEditable || !setRating) return
         setRating(rating)
     }
 
     useEffect(()=>{
-        constructRating()
+        constructRating(rating)
     },[rating, constructRating])
 
     return (

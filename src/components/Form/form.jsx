@@ -1,62 +1,58 @@
-import { useState } from 'react';
-import './index.css';
-
-function Form({serializeCb}){
-    // состояние хранит заполненые данные с формы
-    const [formData, setFormData]= useState({
-        name:"",
-        lastName:"",
-        phoneNumber:""
-    });
+import cn from 'classnames';
+import s from './index.module.css';
+import './style.css';
 
 
-    const handleChange = (event)=>{
-        // Дестректурирует то что было в formData и заменяем на то что вводим
-        // [event.target.name] переменная обращаемся через []
-        setFormData({...formData, [event.target.name]: event.target.value})
-    }
+function Form({ title, handleFormSubmit, children }) {
 
-    const handleSubmit=(event)=>{
-        event.preventDefault();
-        serializeCb(formData)
-        setFormData({
-            name:"",
-            lastName:"",
-            phoneNumber:""
-        })
-    }
+    return (
+        <form className={s.form} onSubmit={handleFormSubmit}>
 
-    return(
-        <form>
-            <h3>Введите данные</h3>
+            <h1 className={s.title}>{title}</h1>
 
-            <input
-                type='text'
-                name="name"
-                placeholder="Имя"
-                value={formData.name}
-                onChange={handleChange}
-                />
+            {children}
+{/* 
+            <FormInput
+                {...emailRegister}
+                id="email"
+                type="text"
+                placeholder={input.email}
+            />
 
-                <input
-                type='text'
-                name="lastName"
-                placeholder="Фамилия"
-                value={formData.lastName}
-                onChange={handleChange}
-                />
+            <div>
+                {errors?.email && <p className='errorMessage'>{errors?.email?.message}</p>}
+            </div>
 
-                <input
-                type='text'
-                name="phoneNumber"
-                placeholder="Номер телефона"
-                value={formData.phoneNumber}
-                onChange={handleChange}
-                />
+            {['login', 'registration'].includes(formType) &&
+                <>
+                    <FormInput
+                        {...passwordRegister}
+                        id="password"
+                        type="password"
+                        placeholder={input.password}
+                    />
+                    
+                    <div>
+                        {errors?.password && <p className='errorMessage'>{errors?.password?.message}</p>}
+                    </div>
+                </>
+            }
 
-                <button>Отправить</button>
+            {formType === 'login' &&
+                <p className={cn(s.infoText, s.link)} onClick={() => changeType('reset')}>{infoText}</p>
+            }
+
+            {['reset', 'registration'].includes(formType) &&
+                <p className={s.infoText}>{infoText}</p>
+            }
+
+            <FormButton type="submit" color="yellow">{button.submit}</FormButton>
+
+            {['login', 'registration'].includes(formType) &&
+                <FormButton color="white" type="button" onClick={() => changeType(redirect)}>{button.redirect}</FormButton>
+            } */}
         </form>
-    )
-}
+    );
+};
 
 export default Form;

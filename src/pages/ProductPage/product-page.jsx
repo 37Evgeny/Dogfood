@@ -3,7 +3,7 @@ import { useState, useEffect} from 'react';
 import Spinner from "../../components/Spinner/spinner"
 import api from "../../utils/api"
 import { isLiked } from "../../utils/product"
-import { Product } from "../../components/Product/poduct"
+import { Product } from "../../components/Product/product"
 import { useParams } from "react-router-dom";
 import { NotFound } from "../../components/NotFound/not-found";
 import { useContext } from "react";
@@ -34,8 +34,8 @@ const {
   // Фунkция установки лайка 
   const handleProductLike = useCallback(()=>{
     handleLike(product)
-    .then((updatePoduct)=>{
-      setProduct(updatePoduct);
+    .then((updateProduct)=>{
+      setProduct(updateProduct);
     })
   },[product, handleLike, setProduct]) 
 
@@ -63,7 +63,7 @@ const {
             <div className='content__cards'>
               {isLoading
               ?<Spinner/>
-              : !errorState && <Product {...product} setPoduct={setProduct} onProductLike={handleProductLike}/>
+              : !errorState && <Product {...product} setProduct={setProduct} onProductLike={handleProductLike}/>
               }
               {!isLoading && errorState && <NotFound/>}
             </div>

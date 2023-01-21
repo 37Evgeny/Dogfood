@@ -1,4 +1,4 @@
-import './index.css'
+import './index.css';
 import cn from 'classnames'
 import { useState } from 'react';
 import { useEffect } from 'react';
@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 
 function Modal({children}){
 
-const [active, setActive]=useState();
+const [active, setActive]=useState(false);
 
 const navigate= useNavigate()
 useEffect(()=>{
