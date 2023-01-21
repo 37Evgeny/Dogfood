@@ -1,7 +1,7 @@
 import React from "react";
 import s from "./index.module.css";
 
-const Spinner= ()=>{
+const Spinner = () => {
     return (
         <div className={s.spinner}></div>
     )

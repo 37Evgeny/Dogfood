@@ -6,7 +6,7 @@ import { FormButton } from "../FormButton/form-button"
 import { FormInput } from "../FormInput/form-input"
 
 
-export const Register=()=>{
+export const Register = () => {
 
     const location = useLocation();
     const initialPath = location.state?.initialPath;
@@ -15,15 +15,14 @@ export const Register=()=>{
 
     const navigate = useNavigate()
 
-    const handleClickLoginButton = (e) =>{
-    e.preventDefault();
-    navigate('/login', {replace:true, state: {backgraundLocation: location, initialPath}})
-}
+    const handleClickLoginButton = (e) => {
+        e.preventDefault();
+        navigate('/login', { replace: true, state: { backgraundLocation: location, initialPath } })
+    }
 
-const sendRegisterApi=(data)=>{
-    
-}
+    const sendRegisterApi = (data) => {
 
+    }
 
     const emailRegister = register('email', {
         required: {
@@ -36,8 +35,6 @@ const sendRegisterApi=(data)=>{
         }
     })
 
-
-
     const passwordRegister = register('password', {
         required: {
             value: true,
@@ -49,8 +46,6 @@ const sendRegisterApi=(data)=>{
         }
     })
 
-
-
     return (
         <Form title='Регистрация' handleFormSubmit={handleSubmit(sendRegisterApi)}>
             <FormInput
@@ -59,29 +54,17 @@ const sendRegisterApi=(data)=>{
                 type="text"
                 placeholder='email'
             />
-         
-                {errors?.email && <p className='errorMessage'>{errors?.email?.message}</p>}
- 
-
+            {errors?.email && <p className='errorMessage'>{errors?.email?.message}</p>}
             <FormInput
-                        {...passwordRegister}
-                        id="password"
-                        type="password"
-                        placeholder='Пароль'
-                    />
-                    
-                        {errors?.password && <p className='errorMessage'>{errors?.password?.message}</p>}
-
-                    
-                    <p className='infoText'>Регистрируясь на сайте, вы соглашаетесь с нашими Правилами и Политикой конфиденциальности и соглашаетесь на информационную рассылку."</p>
-
-                    <FormButton type="submit" color="yellow">Зарегистрироваться</FormButton>
-                    <FormButton color="white" type="button" onClick={handleClickLoginButton}>Войти</FormButton>
-
-
+                {...passwordRegister}
+                id="password"
+                type="password"
+                placeholder='Пароль'
+            />
+            {errors?.password && <p className='errorMessage'>{errors?.password?.message}</p>}
+            <p className='infoText'>Регистрируясь на сайте, вы соглашаетесь с нашими Правилами и Политикой конфиденциальности и соглашаетесь на информационную рассылку."</p>
+            <FormButton type="submit" color="yellow">Зарегистрироваться</FormButton>
+            <FormButton color="white" type="button" onClick={handleClickLoginButton}>Войти</FormButton>
         </Form>
-
-
-
     )
 }

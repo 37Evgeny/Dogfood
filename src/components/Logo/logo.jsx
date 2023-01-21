@@ -1,6 +1,6 @@
 import './index.css';
 import logoSrc from './logo.svg'
-import {Link} from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 function Logo({ className, href, ...props }) {
   const hrefValue = href ? href : null;

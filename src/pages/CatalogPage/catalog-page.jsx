@@ -4,16 +4,12 @@ import Sort from "../../components/Sort/sort"
 import Spinner from "../../components/Spinner/spinner"
 import { CardContext } from "../../context/cardContext"
 
-
-
-
-
-export const CatalogPage = ({isLoading}) =>{
-    const {cards} = useContext(CardContext)
+export const CatalogPage = ({ isLoading }) => {
+    const { cards } = useContext(CardContext)
 
     return (
         <>
-            <Sort/>
+            <Sort />
             <div className='content__cards'>
                 {isLoading
                     ? <Spinner />

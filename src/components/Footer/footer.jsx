@@ -13,7 +13,7 @@ const Footer = () => {
 			<div className="container">
 				<div className="footer__wrapper">
 					<div className="footer__col">
-						<Logo className="logo footer__logo" title="Логотип" aria-hidden={true}/>
+						<Logo className="logo footer__logo" title="Логотип" aria-hidden={true} />
 						<p className="footer__copyright">
 							© «Интернет-магазин DogFood.ru»
 						</p>
@@ -62,33 +62,32 @@ const Footer = () => {
 							<ul className="socials contacts__socials">
 								<li className="socials__item">
 									<a className="socials__link" href="/#">
-										<img src={telegram} alt="telegram" className="socials__icon"/>
+										<img src={telegram} alt="telegram" className="socials__icon" />
 									</a>
 								</li>
 
 								<li className="socials__item">
 									<a className="socials__link" href="/#">
-										<img src={whatsapp} alt="whatsapp" className="socials__icon"/>
+										<img src={whatsapp} alt="whatsapp" className="socials__icon" />
 									</a>
 								</li>
 								<li className="socials__item">
 									<a className="socials__link" href="/#">
-										<img src={viber} alt="viber" className="socials__icon"/>
+										<img src={viber} alt="viber" className="socials__icon" />
 									</a>
 								</li>
 								<li className="socials__item">
 									<a className="socials__link" href="/#">
-										<img src={instagram} alt="instagram" className="socials__icon"/>
+										<img src={instagram} alt="instagram" className="socials__icon" />
 									</a>
 								</li>
 								<li className="socials__item">
 									<a className="socials__link" href="/#">
-										<img src={vk} alt="vk" className="socials__icon"/>
+										<img src={vk} alt="vk" className="socials__icon" />
 									</a>
 								</li>
 							</ul>
 						</div>
-
 					</div>
 				</div>
 			</div>

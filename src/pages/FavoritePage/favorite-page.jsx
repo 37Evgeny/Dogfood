@@ -4,16 +4,16 @@ import { ContentHeader } from "../../components/ContentHeader/content-header"
 import Spinner from "../../components/Spinner/spinner"
 import { CardContext } from "../../context/cardContext"
 
-export const FavoritePage = ({isLoading} ) =>{
-    const {favorites} = useContext(CardContext)
+export const FavoritePage = ({ isLoading }) => {
+    const { favorites } = useContext(CardContext)
 
     return (
         <>
-            <ContentHeader title='Избранное'/>
+            <ContentHeader title='Избранное' />
             <div className='content__cards'>
                 {isLoading
                     ? <Spinner />
-                    : <CardList cards={favorites}/>
+                    : <CardList cards={favorites} />
                 }
             </div>
         </>
