@@ -25,7 +25,11 @@ import { ThemeContext } from 'styled-components';
 import { Register } from '../Register/register';
 import { Login } from '../Login/login';
 import { ResetPassword } from '../ResetPassword/reset-password';
-
+import { HomePage } from '../../pages/HomePage/home-page';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchChangeLikeProduct, fetchProducts } from '../../storage/products/productsSlice';
+import { fetchUser, fetchUserTokenCheck } from '../../storage/user/userSlice';
+import { ProtectedRoute } from '../ProtectedRoute/protected-route';
 
 
 
@@ -38,7 +42,7 @@ function App() {
   const [currentUser, setCurrentUser] = useState(null);
   // Состояние для спинера 
   const [isLoading, setIsLoading] = useState(true);
-
+  const loggedIn = useSelector(state=>state.user.loggedIn)
   const [theme, setTheme] = useState(themes.light);
   const [favorites, setFavorites] = useState([])
   const [currentSort, setCurrentSort] = useState("")
@@ -47,7 +51,7 @@ function App() {
   const navigate = useNavigate()
 
   const [isOpenModalForm, setIsOpenModalForm] = useState(false);
-
+  const dispatch = useDispatch();
   const location = useLocation();
 
   const backgroundLocation = location.state?.backgroundLocation;
@@ -91,23 +95,32 @@ function App() {
       })
   }, [searchQuery])
 
-  useEffect(() => {
-    //  влючаем спиннер  
-    setIsLoading(true)
-    Promise.all([api.getProductList(), api.getUserInfo()])
-      .then(([productsData, userData]) => {
-        setCurrentUser(userData)
-        setCards(productsData.products)
-        const favoriteProducts = productsData.products.filter(item => isLiked(item.likes, userData._id))
-        setFavorites(prevState => favoriteProducts)
-      })
-      // Чтобы не было не обработаного промиса
-      .catch(err => console.log(err))
-      // выключаем спинер
-      .finally(() => {
-        setIsLoading(false)
-      })
-  }, [])
+  useEffect(()=>{
+    const userData = dispatch(fetchUserTokenCheck(token))
+      if(token){
+       userData.then(()=>{
+      dispatch(fetchProducts());
+    })
+    }
+  },[dispatch,token])
+
+  // useEffect(() => {
+  //   //  влючаем спиннер  
+  //   setIsLoading(true)
+  //   Promise.all([api.getProductList(), api.getUserInfo()])
+  //     .then(([productsData, userData]) => {
+  //       setCurrentUser(userData)
+  //       setCards(productsData.products)
+  //       const favoriteProducts = productsData.products.filter(item => isLiked(item.likes, userData._id))
+  //       setFavorites(prevState => favoriteProducts)
+  //     })
+  //     // Чтобы не было не обработаного промиса
+  //     .catch(err => console.log(err))
+  //     // выключаем спинер
+  //     .finally(() => {
+  //       setIsLoading(false)
+  //     })
+  // }, [])
 
   //Динамическое изменение поиска 
   useEffect(() => {
@@ -136,25 +149,27 @@ function App() {
   }
   // Фунция установки лайка 
   const handleProductLike = useCallback((product) => {
-    const liked = isLiked(product.likes, currentUser._id)
-    return api.changeLikeProduct(product._id, liked)
-      .then((updateCard) => {
-        // Перебирает массив 
-        const newProducts = cards.map(cardState => {
-          // Возвращает новый массив если был поставлен лайк или удален       
-          return cardState._id === updateCard._id ? updateCard : cardState;
-        })
+    // const liked = isLiked(product.likes, currentUser._id)
+    // return api.changeLikeProduct(product._id, liked)
+    //   .then((updateCard) => {
+    //     // Перебирает массив 
+    //     const newProducts = cards.map(cardState => {
+    //       // Возвращает новый массив если был поставлен лайк или удален       
+    //       return cardState._id === updateCard._id ? updateCard : cardState;
+    //     })
 
-        if (!liked) {
-          setFavorites(prevState => [...prevState, updateCard])
-        } else {
-          setFavorites(prevState => prevState.filter(card => card._id !== updateCard._id))
-        }
+    //     if (!liked) {
+    //       setFavorites(prevState => [...prevState, updateCard])
+    //     } else {
+    //       setFavorites(prevState => prevState.filter(card => card._id !== updateCard._id))
+    //     }
 
-        setCards(newProducts);
-        return updateCard;
-      })
+    //     setCards(newProducts);
+    //     return updateCard;
+    //   })
+    return dispatch(fetchChangeLikeProduct(product))
   }, [currentUser, cards])
+  
   // переключение темы
   const toggleTheme = () => {
     theme === themes.dark ? setTheme(themes.light) : setTheme(themes.dark);
@@ -167,21 +182,18 @@ function App() {
 
 
 
-const sortedData=(currentSort)=>{
+// const sortedData=(currentSort)=>{
 
-  switch(currentSort){
-      case 'low': setCards(cards.sort((a,b)=>b.price -a.price));break;
-      case 'cheap': setCards(cards.sort((a,b)=>a.price -b.price));break;
-      case 'sale': setCards(cards.sort((a,b)=>b.discount -a.discount));break;
-      default:setCards(cards.sort((a,b)=>a.price -b.price));break;
-  }
-}
+// //   switch(currentSort){
+// //     case 'low': setCards(cards.sort((a,b)=>b.price -a.price));break;
+// //     case 'cheap': setCards(cards.sort((a,b)=>a.price -b.price));break;
+// //     case 'sale': setCards(cards.sort((a,b)=>b.discount -a.discount));break;
+// //     default:setCards(cards.sort((a,b)=>a.price -b.price));break;
+// // }
+// }
 
   return (
-    <ThemeContext.Provider value={{ theme: themes.light, toggleTheme }}>
-      <UserContext.Provider value={{ user: currentUser }}>
-        <CardContext.Provider value={{ cards, favorites, currentSort, handleLike: handleProductLike, onSortData: sortedData, setCurrentSort }}>
-
+<>
           {/* <Modal active={isOpenModalForm} setActive={setIsOpenModalForm}>
           <RegitrationForm/>
       </Modal> */}
@@ -190,36 +202,57 @@ const sortedData=(currentSort)=>{
             <>
               <Logo className="logo logo_place_header" href="/" />
               <Routes >
-                <Route path='/' element={
+                <Route path='/catalog' element={
                   <Search onSubmit={handleFormSubmit}
                     onInput={handleInputChange}
                   />
                 } />
+              <Route path='*' element={<></>}/>
               </Routes>
             </>
           </Header>
-          <main className='content container'>
+          <main className='content'>
             <SeachInfo searchText={searchQuery} />
             <Routes location={(backgroundLocation && { ...backgroundLocation, pathname: initialPath }) || location}>
               <Route index element={
-                <CatalogPage/>
+                <HomePage/>
+              }/>
+
+              <Route path='/catalog' element={
+                <ProtectedRoute>
+                    <CatalogPage/>
+                </ProtectedRoute>
               } />
               <Route path='/product/:productId' element={
                 <ProductPage isLoading={isLoading} />
               } />
+
               <Route path='/faq' element={<FaqPage />} />
-              <Route path='/favorites' element={<FavoritePage isLoading={isLoading} />} />
+
+              <Route path='/favorites' element={
+                <ProtectedRoute>
+                    <FavoritePage isLoading={isLoading} />
+                </ProtectedRoute>
+                } 
+              />
+              
               {/* отвечает за фоновое отображение */}
               <Route path='/login' element={
-                 <Login />
+                <ProtectedRoute onlyUnAuth>
+                    <Login />
+                </ProtectedRoute>
               } />
 
               <Route path='/register' element={
-                 <Register/>
+                <ProtectedRoute onlyUnAuth>
+                     <Register/>
+                </ProtectedRoute>
                 } />
 
                  <Route path='/reset-password' element={
-                 <ResetPassword/>
+                  <ProtectedRoute onlyUnAuth>
+                      <ResetPassword/>
+                  </ProtectedRoute>
               } />
 
               <Route path='*' element={<NotFoundPage />} />
@@ -229,30 +262,37 @@ const sortedData=(currentSort)=>{
             {backgroundLocation && (
               <Routes>
                 <Route path='/login' element={
-                  <Modal>
+                  <ProtectedRoute onlyUnAuth>
+                    <Modal>
                    <Login />
                   </Modal>
+                  </ProtectedRoute>
+                 
                 } />
 
                 <Route path='/register' element={
-                  <Modal>
+                  <ProtectedRoute onlyUnAuth>
+ <Modal>
                    <Register />
                   </Modal>
+                  </ProtectedRoute>
+                 
                 } />
 
                 <Route path='/reset-password' element={
-                  <Modal>
+                  <ProtectedRoute onlyUnAuth>
+ <Modal>
                     <ResetPassword />
                   </Modal>
+                  </ProtectedRoute>
+                 
                 } />
               </Routes>
               )}
 
           </main>
           <Footer />
-        </CardContext.Provider>
-      </UserContext.Provider>
-    </ThemeContext.Provider>
+    </>
   )
 }
 

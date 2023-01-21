@@ -14,8 +14,12 @@ body {
 	max-width: 1024px;
 	padding-left: 16px;
 	padding-right: 16px;
-	width: 95%;
+	width: 100%;
 	margin: 0 auto;
+  }
+
+.container_inner{
+	margin-top: 20px;
 }
 
 img {
@@ -23,7 +27,7 @@ img {
 }
 
 .content {
-	padding: 20px 0;
+	padding: 0 0 20px;
 	flex: 1;
 }
 

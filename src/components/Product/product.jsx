@@ -12,10 +12,12 @@ import { Rating } from '../Rating/rating';
 import { useState } from 'react';
 import { useMemo } from 'react';
 import { FormReview } from '../FormReview/form-review';
+import { useSelector } from 'react-redux';
 
 
-export const Product = ({onProductLike, pictures, likes=[], reviews, tags, name, price, discount, description, wight, _id, setProduct}) =>{
-    const {user: currentUser} = useContext(UserContext)
+export const Product = ({onProductLike, pictures, likes=[], reviews, tags, name, price, discount, description, wight, _id}) =>{
+    const currentUser= useSelector(state=>state.user.data)
+    // const {user: currentUser} = useContext(UserContext)
     // const [rating, setRating]= useState(null)
     // useNavigete хуk для навигации
     // const navigate =useNavigate()
@@ -110,7 +112,7 @@ export const Product = ({onProductLike, pictures, likes=[], reviews, tags, name,
                 {reviews.map(reviewData=><li key={reviewData._id}>{reviewData.text} <Rating rating={reviewData.rating}/></li>)}
             </ul>
             
-            <FormReview title={`Отзыв о товаре ${name}`} productId={_id} setProduct={setProduct}/>
+            <FormReview title={`Отзыв о товаре ${name}`} productId={_id}/>
         </>
         )
     }

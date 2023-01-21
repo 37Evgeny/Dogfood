@@ -4,20 +4,29 @@ import {ReactComponent as Save} from "./save.svg";
 import { isLiked } from '../../utils/product';
 import { calcDiscountPrice } from '../../utils/product';
 import { Link } from 'react-router-dom';
-import { useContext } from 'react';
+import { useCallback, useContext } from 'react';
 import { UserContext } from '../../context/userContext';
 import { CardContext } from '../../context/cardContext';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchChangeLikeProduct } from '../../storage/products/productsSlice';
 
 const Card = ({name, _id, likes, price, discount, wight, description, pictures}) => { 
-	const {user: currentUser} = useContext(UserContext);
-	const {handleLike: onProductLike} = useContext(CardContext);
+	// const {user: currentUser} = useContext(UserContext);
+	const dispatch= useDispatch();
+	const currentUser= useSelector(state=>state.user.data);
+	const isLoading =useSelector(state=>state.user.getUserRequest)
+	// const {handleLike: onProductLike} = useContext(CardContext);
 	const discount_price = calcDiscountPrice(price, discount);
 	const liked = isLiked(likes, currentUser?._id);
 
+	  // Фунция установки лайка 
+	  const handleLikeClick = useCallback(() => {
+		return dispatch(fetchChangeLikeProduct({_id,likes}))
+	  }, [dispatch, _id, likes])
 
-	function handleLikeClick(){
-	onProductLike({_id, likes})
-}
+// 	function handleLikeClick(){
+// 	onProductLike({_id, likes})
+// }
 
 	return (
 		<div className="card">

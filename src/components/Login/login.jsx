@@ -1,12 +1,14 @@
 import { useForm } from "react-hook-form"
+import { useDispatch } from "react-redux"
 import { useLocation, useNavigate } from "react-router-dom"
+import { fetchUserAuthenticate } from "../../storage/user/userSlice"
 import { EMAIL_REGEXP, PASSWORD_REGEXP, VALIDATE_CONFIG } from "../../utils/constants"
 import Form from "../Form/form"
 import { FormButton } from "../FormButton/form-button"
 import { FormInput } from "../FormInput/form-input"
 
 export const Login=()=>{
-
+    const dispatch = useDispatch();
     const location = useLocation();
     const initialPath = location.state?.initialPath;
 
@@ -25,7 +27,7 @@ const handleClickRegistrationButton = (e) =>{
 }
 
 const sendRegisterApi=(data)=>{
-    console.log(data);
+    dispatch(fetchUserAuthenticate(data))
 }
 
 

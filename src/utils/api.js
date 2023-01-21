@@ -58,6 +58,32 @@ class Api {
             headers: this._headers
         }).then(onResponce)
     }
+
+    // 
+    register(bodyData){
+        return fetch(`${this._baseUrl}/singup`, {
+            method: 'POST',
+            headers: this._headers,
+            body: JSON.stringify(bodyData)
+        }).then(onResponce)
+    }
+    // 
+    authorize({bodyData}){
+        return fetch(`${this._baseUrl}/singin`, {
+            method: 'POST',
+            headers: this._headers,
+            body: JSON.stringify(bodyData)
+        }).then(onResponce)
+    }
+
+    // 
+    checkToken(token){
+        return fetch(`${this._baseUrl}/users/me`, {
+            headers: {
+                ...this._headers, Authorization: `Bearer ${token}`
+            }
+        }).then(onResponce)
+    }
 }
 
 const config={

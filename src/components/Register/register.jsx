@@ -1,13 +1,15 @@
 import { useForm } from "react-hook-form"
+import { useDispatch } from "react-redux"
 import { useLocation, useNavigate } from "react-router-dom"
-import { EMAIL_REGEXP, PASSWORD_REGEXP, VALIDATE_CONFIG } from "../../utils/constants"
+import { fetchUserRegister } from "../../storage/user/userSlice"
+import { EMAIL_REGEXP, GROUP_REGEXP, PASSWORD_REGEXP, VALIDATE_CONFIG } from "../../utils/constants"
 import Form from "../Form/form"
 import { FormButton } from "../FormButton/form-button"
 import { FormInput } from "../FormInput/form-input"
 
 
 export const Register=()=>{
-
+    const dispatch = useDispatch();
     const location = useLocation();
     const initialPath = location.state?.initialPath;
 
@@ -21,7 +23,7 @@ export const Register=()=>{
 }
 
 const sendRegisterApi=(data)=>{
-    
+    dispatch(fetchUserRegister(data))
 }
 
 
@@ -49,6 +51,17 @@ const sendRegisterApi=(data)=>{
         }
     })
 
+    const groupRegister = register('group', {
+        required: {
+            value: true,
+            message: VALIDATE_CONFIG.requiredMessage
+        },
+        pattern: {
+            value: GROUP_REGEXP,
+            message: VALIDATE_CONFIG.groupMessage
+        }
+    })
+
 
 
     return (
@@ -72,7 +85,16 @@ const sendRegisterApi=(data)=>{
                     
                         {errors?.password && <p className='errorMessage'>{errors?.password?.message}</p>}
 
+                        <FormInput
+                        {...groupRegister}
+                        id="group"
+                        type="text"
+                        placeholder='id группы в формате group-7'
+                    />
                     
+                        {errors?.group && <p className='errorMessage'>{errors?.group?.message}</p>}
+
+
                     <p className='infoText'>Регистрируясь на сайте, вы соглашаетесь с нашими Правилами и Политикой конфиденциальности и соглашаетесь на информационную рассылку."</p>
 
                     <FormButton type="submit" color="yellow">Зарегистрироваться</FormButton>
